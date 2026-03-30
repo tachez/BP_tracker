@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>BP-трекер · Графит</title>
+    <title>BP-трекер</title>
     <style>
         * {
             margin: 0;
@@ -25,7 +25,6 @@
             margin: 0 auto;
         }
 
-        /* заголовок по центру */
         .header {
             text-align: center;
             margin-bottom: 20px;
@@ -39,7 +38,6 @@
             margin-bottom: 12px;
         }
 
-        /* общее количество BP вверху */
         .total-bp-card {
             background: #1e2124;
             border-radius: 20px;
@@ -48,7 +46,16 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
             box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+
+        .total-bp-left {
+            display: flex;
+            align-items: baseline;
+            gap: 8px;
+            flex-wrap: wrap;
         }
 
         .total-bp-label {
@@ -64,7 +71,38 @@
             letter-spacing: -0.5px;
         }
 
-        /* VIP переключатель */
+        .initial-bp-block {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: #2a2e32;
+            padding: 6px 14px;
+            border-radius: 40px;
+        }
+
+        .initial-bp-label {
+            font-size: 13px;
+            color: #9aa3ae;
+        }
+
+        .initial-bp-input {
+            background: #1e2124;
+            border: 1px solid #3a3f44;
+            border-radius: 28px;
+            padding: 8px 12px;
+            width: 90px;
+            font-size: 16px;
+            font-weight: 600;
+            color: #F3CD49;
+            text-align: center;
+            font-family: inherit;
+            outline: none;
+        }
+
+        .initial-bp-input:focus {
+            border-color: #F3CD49;
+        }
+
         .vip-switch {
             display: flex;
             gap: 8px;
@@ -83,20 +121,18 @@
             font-size: 15px;
             font-weight: 500;
             cursor: pointer;
-            transition: all 0.2s ease;
             background: transparent;
             color: #9aa3ae;
             border: none;
             font-family: inherit;
+            transition: 0.2s;
         }
 
         .vip-option.active {
             background: #F3CD49;
             color: #1a1c1e;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.2);
         }
 
-        /* список заданий */
         .tasks-list {
             margin-bottom: 32px;
             background: #1e2124;
@@ -143,10 +179,18 @@
             font-size: 12px;
             color: #F3CD49;
             font-weight: 500;
-            letter-spacing: 0.2px;
         }
 
-        /* счётчики прогресса */
+        .auto-badge {
+            font-size: 10px;
+            background: #2a5f3a;
+            color: #8bc34a;
+            padding: 2px 8px;
+            border-radius: 12px;
+            margin-left: 8px;
+            display: inline-block;
+        }
+
         .counters-section {
             background: #1e2124;
             border-radius: 20px;
@@ -180,7 +224,7 @@
 
         .counter-info {
             flex: 2;
-            min-width: 120px;
+            min-width: 140px;
         }
 
         .counter-label {
@@ -219,7 +263,6 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            touch-action: manipulation;
         }
 
         .counter-btn:active {
@@ -247,17 +290,13 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: 0.1s;
-            touch-action: manipulation;
         }
 
         .counter-reset:active {
             background: #3a3f44;
-            transform: scale(0.94);
             color: #F3CD49;
         }
 
-        /* нижняя кнопка сброса всего */
         .reset-all-btn {
             background: #2c3033;
             border: none;
@@ -269,8 +308,6 @@
             width: 100%;
             cursor: pointer;
             margin-top: 12px;
-            transition: 0.2s;
-            touch-action: manipulation;
         }
 
         .reset-all-btn:active {
@@ -284,122 +321,119 @@
             text-align: center;
             margin-top: 20px;
         }
-
-        hr {
-            border: none;
-            height: 0.5px;
-            background: #2c3033;
-            margin: 12px 0;
-        }
     </style>
 </head>
 <body>
 <div class="container">
     <div class="header">
-        <h1>📋  BP-трекер</h1>
+        <h1>💰 BP-трекер</h1>
     </div>
 
-    <!-- общее количество BP вверху -->
     <div class="total-bp-card">
-        <span class="total-bp-label">Всего получено BP</span>
-        <span class="total-bp-value" id="totalBpTop">0</span>
+        <div class="total-bp-left">
+            <span class="total-bp-label">Получено BP</span>
+            <span class="total-bp-value" id="totalBpDisplay">0</span>
+        </div>
+        <div class="initial-bp-block">
+            <span class="initial-bp-label">Исходно BP</span>
+            <input type="number" id="initialBpInput" class="initial-bp-input" value="0" step="1" min="0" placeholder="0">
+        </div>
     </div>
 
-    <!-- переключатель VIP -->
     <div class="vip-switch">
         <button class="vip-option" data-vip="false">🔹 Без VIP</button>
         <button class="vip-option" data-vip="true">💎 С VIP</button>
     </div>
 
-    <!-- список заданий -->
     <div class="tasks-list" id="tasksList"></div>
 
-    <!-- счётчики прогресса -->
     <div class="counters-section">
         <div class="counters-title">📊 Счётчики прогресса</div>
         <div id="countersContainer"></div>
     </div>
 
-    <!-- кнопка сброса всего -->
     <button class="reset-all-btn" id="resetAllBtn">⟳ Сбросить всё</button>
-    <div class="note">✓ Отмечайте выполненные задания • Счётчики помогают отслеживать прогресс</div>
+    <div class="note">✓ Отмечайте задания вручную • Счётчики автоматически отмечают задание при достижении цели и снимают отметку при сбросе • Исходное BP не влияет на полученные BP</div>
 </div>
 
 <script>
-    // ---------- СПИСОК ЗАДАНИЙ ----------
+    // Задания с привязкой к счётчикам
     const tasksData = [
-        { text: "3 часа в онлайне (можно многократно)", bpBase: 2, bpVip: 4 },
-        { text: "Нули в казино", bpBase: 2, bpVip: 4 },
-        { text: "25 действий на стройке", bpBase: 2, bpVip: 4 },
-        { text: "25 действий в порту", bpBase: 2, bpVip: 4 },
-        { text: "25 действий в шахте", bpBase: 2, bpVip: 4 },
-        { text: "20 подходов в тренажерном зале", bpBase: 1, bpVip: 2 },
-        { text: "Успешная тренировка в тире", bpBase: 1, bpVip: 2 },
-        { text: "10 посылок на почте", bpBase: 1, bpVip: 2 },
-        { text: "Купить лотерейный билет", bpBase: 1, bpVip: 2 },
-        { text: "10 действий на ферме", bpBase: 1, bpVip: 2 },
-        { text: "Выкопать 1 сокровище (не мусор)", bpBase: 1, bpVip: 2 },
-        { text: "5 раз снять 100% шкуру с животных", bpBase: 2, bpVip: 4 },
-        { text: "Поймать 20 рыб", bpBase: 4, bpVip: 8 },
-        { text: "Выполнить 3 заказа дальнобойщиком", bpBase: 2, bpVip: 4 },
-        { text: "2 круга на любом маршруте автобусника", bpBase: 2, bpVip: 4 },
-        { text: "Посетить любой сайт в браузере", bpBase: 1, bpVip: 2 },
-        { text: "Зайти в любой канал в Brawl", bpBase: 1, bpVip: 2 },
-        { text: "Поставить лайк любой анкете в Match", bpBase: 1, bpVip: 2 },
-        { text: "Кинуть мяч питомцу 15 раз", bpBase: 2, bpVip: 4 },
-        { text: "15 выполненных питомцем команд", bpBase: 2, bpVip: 4 },
-        { text: "Ставка в колесе удачи (межсерверное колесо)", bpBase: 3, bpVip: 6 },
-        { text: "Сыграть в мафию в казино", bpBase: 3, bpVip: 6 },
-        { text: "Выиграть гонку в картинге", bpBase: 1, bpVip: 2 },
-        { text: "Проехать 1 станцию на метро", bpBase: 2, bpVip: 4 },
-        { text: "Выполнить 2  квеста любых клубов", bpBase: 4, bpVip: 8 },
-        { text: "Починить деталь в автосервисе", bpBase: 1, bpVip: 2 },
-        { text: "Забросить 2 мяча в баскетболе", bpBase: 1, bpVip: 2 },
-        { text: "Забить 2 гола в футболе", bpBase: 1, bpVip: 2 },
-        { text: "Победить в армрестлинге", bpBase: 1, bpVip: 2 },
-        { text: "Победить в дартс", bpBase: 1, bpVip: 2 },
-        { text: "Поиграть 1 минуту в волейбол", bpBase: 1, bpVip: 2 },
-        { text: "Поиграть 1 минуту в настольный теннис", bpBase: 1, bpVip: 2 },
-        { text: "Поиграть 1 минуту в большой теннис", bpBase: 1, bpVip: 2 },
-        { text: "Сделать платеж по лизингу", bpBase: 1, bpVip: 2 },
-        { text: "Посадить траву в теплице", bpBase: 4, bpVip: 8 },
-        { text: "Запустить переработку обезболивающих в лаборатории", bpBase: 4, bpVip: 8 },
-        { text: "Принять участие в двух аирдропах", bpBase: 4, bpVip: 8 },
-        { text: "3 победы в Дэнс Баттлах", bpBase: 2, bpVip: 4 },
-        { text: "Заказ материалов для бизнеса вручную (вкл/выкл)", bpBase: 1, bpVip: 2 },
-        { text: "Арендовать киностудию", bpBase: 2, bpVip: 4 },
-        { text: "Прокрутить за DP серебрянный, золотой или driver кейс", bpBase: 10, bpVip: 20 },
-        { text: "Два раза оплатить смену внешности у хирурга в EMS", bpBase: 2, bpVip: 4 },
-        { text: "Добавить 5 видео в кинотеатре", bpBase: 1, bpVip: 2 },
-        { text: "Выиграть 5 игр в тренировочном комплексе со ставкой (от 100$)", bpBase: 1, bpVip: 2 },
-        { text: "Выиграть 3 любых игры на арене со ставкой (от 100$)", bpBase: 1, bpVip: 2 },
-        { text: "Потушить 25 'огоньков' пожарным", bpBase: 1, bpVip: 2 },
-        { text: "Проехать 1 уличную гонку (регистрация в телефоне, ставка ≥1000$)", bpBase: 1, bpVip: 2 }
+        { id: null, text: "3 часа в онлайне (можно многократно)", bpBase: 2, bpVip: 4, autoCounter: null },
+        { id: null, text: "Нули в казино", bpBase: 2, bpVip: 4, autoCounter: null },
+        { id: "build", text: "25 действий на стройке", bpBase: 2, bpVip: 4, autoCounter: "build", required: 25 },
+        { id: "port", text: "25 действий в порту", bpBase: 2, bpVip: 4, autoCounter: "port", required: 25 },
+        { id: "mine", text: "25 действий в шахте", bpBase: 2, bpVip: 4, autoCounter: "mine", required: 25 },
+        { id: "gym", text: "20 подходов в тренажерном зале", bpBase: 1, bpVip: 2, autoCounter: "gym", required: 20 },
+        { id: null, text: "Успешная тренировка в тире", bpBase: 1, bpVip: 2, autoCounter: null },
+        { id: "post", text: "10 посылок на почте", bpBase: 1, bpVip: 2, autoCounter: "post", required: 10 },
+        { id: null, text: "Купить лотерейный билет", bpBase: 1, bpVip: 2, autoCounter: null },
+        { id: "farm", text: "10 действий на ферме", bpBase: 1, bpVip: 2, autoCounter: "farm", required: 10 },
+        { id: null, text: "Выкопать 1 сокровище (не мусор)", bpBase: 1, bpVip: 2, autoCounter: null },
+        { id: null, text: "5 раз снять 100% шкуру с животных", bpBase: 2, bpVip: 4, autoCounter: null },
+        { id: "fish", text: "Поймать 20 рыб", bpBase: 4, bpVip: 8, autoCounter: "fish", required: 20 },
+        { id: null, text: "Выполнить 3 заказа дальнобойщиком", bpBase: 2, bpVip: 4, autoCounter: null },
+        { id: null, text: "2 круга на любом маршруте автобусника", bpBase: 2, bpVip: 4, autoCounter: null },
+        { id: null, text: "Посетить любой сайт в браузере", bpBase: 1, bpVip: 2, autoCounter: null },
+        { id: null, text: "Зайти в любой канал в Brawl", bpBase: 1, bpVip: 2, autoCounter: null },
+        { id: null, text: "Поставить лайк любой анкете в Match", bpBase: 1, bpVip: 2, autoCounter: null },
+        { id: null, text: "Кинуть мяч питомцу 15 раз", bpBase: 2, bpVip: 4, autoCounter: null },
+        { id: null, text: "15 выполненных питомцем команд", bpBase: 2, bpVip: 4, autoCounter: null },
+        { id: null, text: "Ставка в колесе удачи (межсерверное колесо)", bpBase: 3, bpVip: 6, autoCounter: null },
+        { id: null, text: "Сыграть в мафию в казино", bpBase: 3, bpVip: 6, autoCounter: null },
+        { id: null, text: "Выиграть гонку в картинге", bpBase: 1, bpVip: 2, autoCounter: null },
+        { id: null, text: "Проехать 1 станцию на метро", bpBase: 2, bpVip: 4, autoCounter: null },
+        { id: "clubQuests", text: "Выполнить 2 квеста любых клубов", bpBase: 4, bpVip: 8, autoCounter: "clubQuests", required: 2 },
+        { id: null, text: "Починить деталь в автосервисе", bpBase: 1, bpVip: 2, autoCounter: null },
+        { id: null, text: "Забросить 2 мяча в баскетболе", bpBase: 1, bpVip: 2, autoCounter: null },
+        { id: null, text: "Забить 2 гола в футболе", bpBase: 1, bpVip: 2, autoCounter: null },
+        { id: null, text: "Победить в армрестлинге", bpBase: 1, bpVip: 2, autoCounter: null },
+        { id: null, text: "Победить в дартс", bpBase: 1, bpVip: 2, autoCounter: null },
+        { id: null, text: "Поиграть 1 минуту в волейбол", bpBase: 1, bpVip: 2, autoCounter: null },
+        { id: null, text: "Поиграть 1 минуту в настольный теннис", bpBase: 1, bpVip: 2, autoCounter: null },
+        { id: null, text: "Поиграть 1 минуту в большой теннис", bpBase: 1, bpVip: 2, autoCounter: null },
+        { id: null, text: "Сделать платеж по лизингу", bpBase: 1, bpVip: 2, autoCounter: null },
+        { id: null, text: "Посадить траву в теплице", bpBase: 4, bpVip: 8, autoCounter: null },
+        { id: null, text: "Запустить переработку обезболивающих в лаборатории", bpBase: 4, bpVip: 8, autoCounter: null },
+        { id: null, text: "Принять участие в двух аирдропах", bpBase: 4, bpVip: 8, autoCounter: null },
+        { id: null, text: "3 победы в Дэнс Баттлах", bpBase: 2, bpVip: 4, autoCounter: null },
+        { id: null, text: "Заказ материалов для бизнеса вручную (вкл/выкл)", bpBase: 1, bpVip: 2, autoCounter: null },
+        { id: null, text: "Арендовать киностудию", bpBase: 2, bpVip: 4, autoCounter: null },
+        { id: null, text: "Прокрутить за DP серебрянный, золотой или driver кейс", bpBase: 10, bpVip: 20, autoCounter: null },
+        { id: null, text: "Два раза оплатить смену внешности у хирурга в EMS", bpBase: 2, bpVip: 4, autoCounter: null },
+        { id: null, text: "Добавить 5 видео в кинотеатре", bpBase: 1, bpVip: 2, autoCounter: null },
+        { id: null, text: "Выиграть 5 игр в тренировочном комплексе со ставкой", bpBase: 1, bpVip: 2, autoCounter: null },
+        { id: null, text: "Выиграть 3 любых игры на арене со ставкой", bpBase: 1, bpVip: 2, autoCounter: null },
+        { id: null, text: "Потушить 25 'огоньков' пожарным", bpBase: 1, bpVip: 2, autoCounter: null },
+        { id: null, text: "Проехать 1 уличную гонку", bpBase: 1, bpVip: 2, autoCounter: null }
     ];
 
-    // Счётчики: название, ключ, необходимое количество, единица измерения
-    const countersData = [
-        { label: "Стройка", key: "build", target: 25, unit: "действий" },
-        { label: "Порт", key: "port", target: 25, unit: "действий" },
-        { label: "Ферма", key: "farm", target: 10, unit: "действий" },
-        { label: "Шахта", key: "mine", target: 25, unit: "действий" },
-        { label: "Рыбалка", key: "fish", target: 20, unit: "рыб" },
-        { label: "Тренажёрный зал", key: "gym", target: 20, unit: "подходов" },
-        { label: "Почта", key: "post", target: 10, unit: "посылок" }
+    // Счётчики с максимальными значениями
+    const countersConfig = [
+        { label: "Стройка", key: "build", max: 25, unit: "действий", taskId: "build" },
+        { label: "Порт", key: "port", max: 25, unit: "действий", taskId: "port" },
+        { label: "Ферма", key: "farm", max: 10, unit: "действий", taskId: "farm" },
+        { label: "Шахта", key: "mine", max: 25, unit: "действий", taskId: "mine" },
+        { label: "Рыбалка", key: "fish", max: 20, unit: "рыб", taskId: "fish" },
+        { label: "Тренажёрный зал", key: "gym", max: 20, unit: "подходов", taskId: "gym" },
+        { label: "Почта", key: "post", max: 10, unit: "посылок", taskId: "post" },
+        { label: "Квесты клубов", key: "clubQuests", max: 2, unit: "квестов", taskId: "clubQuests" }
     ];
 
     // Состояние
     let isVip = false;
     let tasksChecked = new Array(tasksData.length).fill(false);
     let counters = {};
-    countersData.forEach(c => { counters[c.key] = 0; });
+    let initialBpField = 0;
+    
+    countersConfig.forEach(c => { counters[c.key] = 0; });
 
     // Загрузка из localStorage
     function loadData() {
-        const savedVip = localStorage.getItem("graphite_vip_final");
+        const savedVip = localStorage.getItem("bptracker_vip_final");
         if (savedVip !== null) isVip = savedVip === "true";
         
-        const savedTasks = localStorage.getItem("graphite_tasks_final");
+        const savedTasks = localStorage.getItem("bptracker_tasks_final");
         if (savedTasks) {
             try {
                 const parsed = JSON.parse(savedTasks);
@@ -407,37 +441,95 @@
             } catch(e) {}
         }
         
-        const savedCounters = localStorage.getItem("graphite_counters_final");
+        const savedCounters = localStorage.getItem("bptracker_counters_final");
         if (savedCounters) {
             try {
                 const parsed = JSON.parse(savedCounters);
-                countersData.forEach(c => { if (typeof parsed[c.key] === 'number') counters[c.key] = parsed[c.key]; });
+                countersConfig.forEach(c => { if (typeof parsed[c.key] === 'number') counters[c.key] = parsed[c.key]; });
             } catch(e) {}
+        }
+        
+        const savedInitialField = localStorage.getItem("bptracker_initial_final");
+        if (savedInitialField !== null) {
+            const parsed = parseInt(savedInitialField, 10);
+            if (!isNaN(parsed)) initialBpField = parsed;
         }
     }
     
     function saveAll() {
-        localStorage.setItem("graphite_vip_final", isVip);
-        localStorage.setItem("graphite_tasks_final", JSON.stringify(tasksChecked));
-        localStorage.setItem("graphite_counters_final", JSON.stringify(counters));
+        localStorage.setItem("bptracker_vip_final", isVip);
+        localStorage.setItem("bptracker_tasks_final", JSON.stringify(tasksChecked));
+        localStorage.setItem("bptracker_counters_final", JSON.stringify(counters));
+        localStorage.setItem("bptracker_initial_final", initialBpField);
     }
 
-    // BP за задание
-    function getTaskBp(task, isChecked) {
-        if (!isChecked) return 0;
-        return isVip ? task.bpVip : task.bpBase;
+    // Синхронизация отметки задания со счётчиком
+    function syncTaskWithCounter(counterKey, counterValue) {
+        const taskIndex = tasksData.findIndex(t => t.autoCounter === counterKey);
+        if (taskIndex === -1) return false;
+        
+        const required = tasksData[taskIndex].required;
+        const shouldBeChecked = counterValue >= required;
+        
+        if (tasksChecked[taskIndex] !== shouldBeChecked) {
+            tasksChecked[taskIndex] = shouldBeChecked;
+            return true;
+        }
+        return false;
+    }
+
+    // Обновление счётчика с проверкой максимума и синхронизацией отметки
+    function updateCounter(key, delta) {
+        const config = countersConfig.find(c => c.key === key);
+        if (!config) return;
+        
+        let newValue = counters[key] + delta;
+        if (newValue < 0) newValue = 0;
+        if (newValue > config.max) newValue = config.max;
+        
+        if (counters[key] !== newValue) {
+            counters[key] = newValue;
+            // Синхронизируем отметку задания с новым значением счётчика
+            syncTaskWithCounter(key, newValue);
+            saveAll();
+            renderAll();
+        }
+    }
+
+    // Полный сброс счётчика (устанавливает в 0 и снимает отметку)
+    function resetCounter(key) {
+        if (counters[key] !== 0) {
+            counters[key] = 0;
+            // Снимаем отметку с соответствующего задания
+            syncTaskWithCounter(key, 0);
+            saveAll();
+            renderAll();
+        }
+    }
+
+    // BP от заданий
+    function getTasksBp() {
+        let total = 0;
+        for (let i = 0; i < tasksData.length; i++) {
+            if (tasksChecked[i]) {
+                total += isVip ? tasksData[i].bpVip : tasksData[i].bpBase;
+            }
+        }
+        return total;
     }
     
     function getTotalBp() {
-        let total = 0;
-        for (let i = 0; i < tasksData.length; i++) total += getTaskBp(tasksData[i], tasksChecked[i]);
-        return total;
+        return getTasksBp();
     }
 
-    // Обновление отображения общего BP (вверху)
     function updateTotalDisplay() {
-        const totalSpanTop = document.getElementById("totalBpTop");
-        if (totalSpanTop) totalSpanTop.textContent = getTotalBp();
+        const totalSpan = document.getElementById("totalBpDisplay");
+        if (totalSpan) totalSpan.textContent = getTotalBp();
+        
+        const inputField = document.getElementById("initialBpInput");
+        if (inputField && parseInt(inputField.value, 10) !== initialBpField) {
+            inputField.value = initialBpField;
+        }
     }
 
     // Рендер заданий
@@ -449,6 +541,8 @@
         tasksData.forEach((task, idx) => {
             const bpText = isVip ? `${task.bpVip} BP` : `${task.bpBase} BP`;
             const fullBp = `${task.bpBase}/${task.bpVip} BP`;
+            const isAuto = task.autoCounter !== null;
+            const isCompleted = tasksChecked[idx];
             
             const div = document.createElement("div");
             div.className = "task-item";
@@ -456,12 +550,11 @@
             const cb = document.createElement("input");
             cb.type = "checkbox";
             cb.className = "task-checkbox";
-            cb.checked = tasksChecked[idx];
+            cb.checked = isCompleted;
             cb.addEventListener("change", (e) => {
                 tasksChecked[idx] = e.target.checked;
                 saveAll();
-                updateTotalDisplay();
-                // обновляем текст BP в этом же задании (если нужно, но меняется только сумма)
+                renderAll();
             });
             
             const contentDiv = document.createElement("div");
@@ -469,7 +562,7 @@
             
             const textSpan = document.createElement("span");
             textSpan.className = "task-text";
-            textSpan.textContent = task.text;
+            textSpan.innerHTML = task.text + (isAuto ? `<span class="auto-badge">счётчик</span>` : "");
             
             const bpSpan = document.createElement("span");
             bpSpan.className = "task-bp";
@@ -484,13 +577,16 @@
         });
     }
 
-    // Рендер счётчиков с кнопкой сброса у каждого
+    // Рендер счётчиков
     function renderCounters() {
         const container = document.getElementById("countersContainer");
         if (!container) return;
         container.innerHTML = "";
         
-        countersData.forEach(c => {
+        countersConfig.forEach(c => {
+            const currentVal = counters[c.key] || 0;
+            const isMax = currentVal >= c.max;
+            
             const row = document.createElement("div");
             row.className = "counter-row";
             
@@ -501,7 +597,11 @@
             labelSpan.textContent = c.label;
             const targetSpan = document.createElement("span");
             targetSpan.className = "counter-target";
-            targetSpan.textContent = `нужно: ${c.target} ${c.unit}`;
+            targetSpan.textContent = `📊 ${currentVal}/${c.max} ${c.unit}`;
+            if (isMax) {
+                targetSpan.style.color = "#8bc34a";
+                targetSpan.innerHTML += ` <span style="font-size:10px;">✓ задание отмечено</span>`;
+            }
             infoDiv.appendChild(labelSpan);
             infoDiv.appendChild(targetSpan);
             
@@ -511,39 +611,22 @@
             const minusBtn = document.createElement("button");
             minusBtn.textContent = "−";
             minusBtn.className = "counter-btn";
-            minusBtn.addEventListener("click", () => {
-                if (counters[c.key] > 0) {
-                    counters[c.key]--;
-                    saveAll();
-                    renderCounters();
-                    updateTotalDisplay();
-                }
-            });
+            minusBtn.addEventListener("click", () => updateCounter(c.key, -1));
             
             const valueSpan = document.createElement("span");
             valueSpan.className = "counter-value";
-            valueSpan.textContent = counters[c.key];
+            valueSpan.textContent = currentVal;
             
             const plusBtn = document.createElement("button");
             plusBtn.textContent = "+";
             plusBtn.className = "counter-btn";
-            plusBtn.addEventListener("click", () => {
-                counters[c.key]++;
-                saveAll();
-                renderCounters();
-                updateTotalDisplay();
-            });
+            plusBtn.addEventListener("click", () => updateCounter(c.key, 1));
             
             const resetSingleBtn = document.createElement("button");
             resetSingleBtn.textContent = "↺";
             resetSingleBtn.className = "counter-reset";
-            resetSingleBtn.title = "Сбросить счётчик";
-            resetSingleBtn.addEventListener("click", () => {
-                counters[c.key] = 0;
-                saveAll();
-                renderCounters();
-                updateTotalDisplay();
-            });
+            resetSingleBtn.title = "Сбросить счётчик и снять отметку";
+            resetSingleBtn.addEventListener("click", () => resetCounter(c.key));
             
             controlsGroup.appendChild(minusBtn);
             controlsGroup.appendChild(valueSpan);
@@ -554,6 +637,12 @@
             row.appendChild(controlsGroup);
             container.appendChild(row);
         });
+    }
+
+    function renderAll() {
+        renderTasks();
+        renderCounters();
+        updateTotalDisplay();
     }
 
     function updateVipButtons() {
@@ -567,43 +656,52 @@
 
     function resetAll() {
         tasksChecked.fill(false);
-        countersData.forEach(c => { counters[c.key] = 0; });
+        countersConfig.forEach(c => { counters[c.key] = 0; });
         saveAll();
-        renderTasks();
-        renderCounters();
-        updateTotalDisplay();
+        renderAll();
     }
 
-    // Инициализация VIP переключателя
-    function initVipSwitcher() {
-        const btns = document.querySelectorAll(".vip-option");
-        btns.forEach(btn => {
-            btn.addEventListener("click", () => {
-                const newVip = btn.dataset.vip === "true";
-                if (newVip !== isVip) {
-                    isVip = newVip;
-                    saveAll();
-                    updateVipButtons();
-                    renderTasks();      // обновляем текст BP у заданий
-                    updateTotalDisplay();
-                }
-            });
+    // Инициализация
+    loadData();
+    
+    // Синхронизация отметок со счётчиками при загрузке
+    countersConfig.forEach(c => {
+        syncTaskWithCounter(c.key, counters[c.key] || 0);
+    });
+    saveAll();
+    
+    const inputField = document.getElementById("initialBpInput");
+    if (inputField) {
+        inputField.value = initialBpField;
+        inputField.addEventListener("change", (e) => {
+            let val = parseInt(e.target.value, 10);
+            if (isNaN(val)) val = 0;
+            if (val < 0) val = 0;
+            initialBpField = val;
+            saveAll();
         });
     }
     
-    // Загрузка и старт
-    loadData();
-    renderTasks();
-    renderCounters();
-    initVipSwitcher();
-    updateVipButtons();
-    updateTotalDisplay();
-    
-    document.getElementById("resetAllBtn")?.addEventListener("click", () => {
-        if (confirm("Сбросить все отметки заданий и счётчики?")) resetAll();
+    const vipBtns = document.querySelectorAll(".vip-option");
+    vipBtns.forEach(btn => {
+        btn.addEventListener("click", () => {
+            const newVip = btn.dataset.vip === "true";
+            if (newVip !== isVip) {
+                isVip = newVip;
+                saveAll();
+                updateVipButtons();
+                renderAll();
+            }
+        });
     });
     
-    // защита от зума двойным тапом
+    document.getElementById("resetAllBtn")?.addEventListener("click", () => {
+        if (confirm("Сбросить все отметки заданий и счётчики? Исходное BP останется неизменным.")) resetAll();
+    });
+    
+    updateVipButtons();
+    renderAll();
+    
     document.addEventListener('touchstart', (e) => {
         if (e.touches.length > 1) e.preventDefault();
     }, { passive: false });
