@@ -3,348 +3,293 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Квест-трекер · VIP / без VIP</title>
+    <title>Квест-трекер · Графит</title>
     <style>
         * {
+            margin: 0;
+            padding: 0;
             box-sizing: border-box;
             -webkit-tap-highlight-color: transparent;
-            /* отключаем масштабирование при двойном тапе на интерактивных элементах */
             touch-action: manipulation;
         }
 
         body {
-            background: #0b1120;
-            font-family: system-ui, -apple-system, 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif;
-            margin: 0;
-            padding: 16px 12px 40px;
-            color: #eef2ff;
-            /* дополнительная защита от зума */
-            touch-action: pan-y pan-x;
+            background-color: #1a1c1e;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            padding: 20px 16px 40px;
+            color: #e8edf2;
         }
 
         .container {
-            max-width: 700px;
+            max-width: 600px;
             margin: 0 auto;
         }
 
+        /* заголовок по центру */
         .header {
-            margin-bottom: 20px;
             text-align: center;
+            margin-bottom: 20px;
         }
 
         h1 {
-            font-size: 1.8rem;
-            font-weight: 700;
-            background: linear-gradient(135deg, #e0e7ff, #a5b4fc);
-            background-clip: text;
-            -webkit-background-clip: text;
-            color: transparent;
-            margin: 0 0 6px 0;
+            font-size: 28px;
+            font-weight: 600;
+            color: #ffffff;
+            letter-spacing: -0.3px;
+            margin-bottom: 12px;
         }
 
-        .sub {
-            font-size: 0.85rem;
-            color: #8ca3cf;
-            border-bottom: 1px solid #1e2a47;
-            display: inline-block;
-            padding-bottom: 4px;
-        }
-
-        /* VIP тумблер */
-        .vip-toggle-card {
-            background: #0f172ad9;
-            backdrop-filter: blur(4px);
-            border-radius: 48px;
-            padding: 8px 20px;
+        /* общее количество BP вверху */
+        .total-bp-card {
+            background: #1e2124;
+            border-radius: 20px;
+            padding: 14px 20px;
             margin-bottom: 20px;
             display: flex;
-            align-items: center;
             justify-content: space-between;
-            flex-wrap: wrap;
-            gap: 12px;
-            border: 1px solid #2d3a5e;
-        }
-
-        .vip-label {
-            font-weight: 600;
-            font-size: 0.9rem;
-            display: flex;
             align-items: center;
-            gap: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
         }
 
-        .toggle-switch {
+        .total-bp-label {
+            font-size: 16px;
+            color: #9aa3ae;
+            font-weight: 500;
+        }
+
+        .total-bp-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: #F3CD49;
+            letter-spacing: -0.5px;
+        }
+
+        /* VIP переключатель */
+        .vip-switch {
             display: flex;
-            background: #1e293b;
-            border-radius: 40px;
+            gap: 8px;
+            background: #232628;
             padding: 4px;
-            gap: 4px;
-        }
-
-        .toggle-option {
-            padding: 6px 18px;
-            border-radius: 32px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: 0.2s;
-            background: transparent;
-            color: #94a3b8;
-            border: none;
-            touch-action: manipulation;
-        }
-
-        .toggle-option.active {
-            background: #facc15;
-            color: #0f172a;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
-        }
-
-        .stats-block {
-            background: #1e293bb3;
-            padding: 6px 18px;
             border-radius: 40px;
-            font-weight: 500;
-            font-size: 0.9rem;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .stats-block span:first-child {
-            color: #cbd5e6;
-        }
-
-        .stats-block span:last-child {
-            font-weight: 800;
-            color: #facc15;
-            font-size: 1.3rem;
-        }
-
-        .reset-all-btn {
-            background: #2d3a5e;
-            border: none;
-            color: #ffb86b;
-            font-weight: 600;
-            padding: 8px 20px;
-            border-radius: 40px;
-            font-size: 0.85rem;
-            cursor: pointer;
-            transition: 0.2s;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            touch-action: manipulation;
-        }
-
-        .reset-all-btn:active {
-            background: #3b4a72;
-            transform: scale(0.97);
-        }
-
-        .actions-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 12px;
             margin-bottom: 24px;
+            width: fit-content;
+            margin-left: auto;
+            margin-right: auto;
         }
 
-        .quest-list {
+        .vip-option {
+            padding: 8px 20px;
+            border-radius: 32px;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: transparent;
+            color: #9aa3ae;
+            border: none;
+            font-family: inherit;
+        }
+
+        .vip-option.active {
+            background: #F3CD49;
+            color: #1a1c1e;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+        }
+
+        /* список заданий */
+        .tasks-list {
+            margin-bottom: 32px;
+            background: #1e2124;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+
+        .task-item {
             display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .quest-card {
-            background: #0f172a;
-            border-radius: 24px;
-            padding: 14px 16px;
-            border: 1px solid #25324e;
-            transition: 0.1s ease;
-        }
-
-        .quest-main {
-            display: flex;
-            flex-wrap: wrap;
             align-items: flex-start;
-            justify-content: space-between;
             gap: 12px;
+            padding: 14px 16px;
+            border-bottom: 0.5px solid #2c3033;
+            background-color: #1e2124;
         }
 
-        .quest-info {
-            flex: 3;
-            min-width: 170px;
+        .task-item:last-child {
+            border-bottom: none;
         }
 
-        .quest-title {
-            font-weight: 600;
-            font-size: 1rem;
-            line-height: 1.35;
-            margin-bottom: 6px;
-            display: flex;
-            flex-wrap: wrap;
-            align-items: baseline;
-            gap: 8px;
+        .task-checkbox {
+            width: 22px;
+            height: 22px;
+            margin-top: 2px;
+            flex-shrink: 0;
+            cursor: pointer;
+            accent-color: #F3CD49;
         }
 
-        .quest-name {
-            color: #f1f5f9;
+        .task-content {
+            flex: 1;
         }
 
-        .bp-badge {
-            background: #312e81;
-            padding: 2px 10px;
-            border-radius: 30px;
-            font-size: 0.7rem;
-            font-weight: 600;
-            color: #c7d2fe;
-            white-space: nowrap;
+        .task-text {
+            font-size: 15px;
+            line-height: 1.4;
+            color: #e8edf2;
+            margin-bottom: 4px;
+            display: block;
         }
 
-        .quest-desc {
-            font-size: 0.75rem;
-            color: #7e8bb6;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 12px;
-            margin-top: 4px;
-        }
-
-        .target-info {
-            background: #1e293b;
-            border-radius: 20px;
-            padding: 2px 8px;
-            display: inline-block;
-            font-size: 0.7rem;
+        .task-bp {
+            font-size: 12px;
+            color: #F3CD49;
             font-weight: 500;
-            color: #94a3d8;
+            letter-spacing: 0.2px;
         }
 
-        .bp-info {
-            background: #2a2f4b;
+        /* счётчики прогресса */
+        .counters-section {
+            background: #1e2124;
             border-radius: 20px;
-            padding: 2px 8px;
-            font-size: 0.7rem;
-            font-weight: 500;
-            color: #facc15;
+            padding: 16px;
+            margin-bottom: 24px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
         }
 
-        .counter-controls {
+        .counters-title {
+            font-size: 17px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: #ffffff;
+            padding-bottom: 6px;
+            border-bottom: 0.5px solid #2c3033;
+        }
+
+        .counter-row {
             display: flex;
             align-items: center;
-            gap: 10px;
-            background: #1e293b;
-            padding: 6px 12px;
-            border-radius: 60px;
-            flex-shrink: 0;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 0.5px solid #2c3033;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .counter-row:last-child {
+            border-bottom: none;
+        }
+
+        .counter-info {
+            flex: 2;
+            min-width: 120px;
+        }
+
+        .counter-label {
+            font-size: 15px;
+            font-weight: 500;
+            color: #e8edf2;
+            display: block;
+            margin-bottom: 2px;
+        }
+
+        .counter-target {
+            font-size: 11px;
+            color: #F3CD49;
+        }
+
+        .counter-controls-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: #2a2e32;
+            padding: 4px 8px;
+            border-radius: 40px;
         }
 
         .counter-btn {
-            background: #334155;
+            background: #3a3f44;
             border: none;
             width: 36px;
             height: 36px;
-            border-radius: 40px;
-            font-size: 1.6rem;
-            font-weight: bold;
+            border-radius: 30px;
+            font-size: 20px;
+            font-weight: 600;
             color: white;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
             cursor: pointer;
             transition: 0.1s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             touch-action: manipulation;
         }
 
         .counter-btn:active {
-            background: #475569;
-            transform: scale(0.94);
+            background: #4f555b;
+            transform: scale(0.96);
         }
 
         .counter-value {
-            font-size: 1.4rem;
-            font-weight: 700;
-            min-width: 48px;
+            min-width: 44px;
             text-align: center;
-            color: #facc15;
-            user-select: none;
-            -webkit-user-select: none;
+            font-size: 18px;
+            font-weight: 600;
+            color: #F3CD49;
         }
 
-        .reset-single {
-            background: none;
+        .counter-reset {
+            background: #2c3033;
             border: none;
-            font-size: 1.2rem;
-            cursor: pointer;
-            color: #7c8ab3;
-            padding: 4px 8px;
+            width: 32px;
+            height: 32px;
             border-radius: 30px;
+            font-size: 14px;
+            cursor: pointer;
+            color: #9aa3ae;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             transition: 0.1s;
             touch-action: manipulation;
         }
 
-        .reset-single:active {
-            background: #2d3a5e;
-            color: #ffb86b;
+        .counter-reset:active {
+            background: #3a3f44;
+            transform: scale(0.94);
+            color: #F3CD49;
         }
 
-        .quest-footer {
-            margin-top: 12px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-top: 1px solid #1e2a47;
-            padding-top: 8px;
-            font-size: 0.75rem;
-            flex-wrap: wrap;
-            gap: 8px;
-        }
-
-        .status-done {
-            color: #4ade80;
+        /* нижняя кнопка сброса всего */
+        .reset-all-btn {
+            background: #2c3033;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 40px;
+            color: #ff9f6e;
+            font-size: 15px;
             font-weight: 500;
+            width: 100%;
+            cursor: pointer;
+            margin-top: 12px;
+            transition: 0.2s;
+            touch-action: manipulation;
         }
 
-        .status-progress {
-            color: #facc15;
+        .reset-all-btn:active {
+            background: #3a3f44;
+            transform: scale(0.98);
         }
 
-        @media (max-width: 550px) {
-            body {
-                padding: 12px 10px 30px;
-            }
-            .quest-main {
-                flex-direction: column;
-            }
-            .counter-controls {
-                align-self: flex-start;
-            }
-            .actions-row {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            .vip-toggle-card {
-                justify-content: center;
-            }
-        }
-
-        button, .toggle-option, .reset-all-btn, .counter-btn, .reset-single {
-            font-family: inherit;
-        }
-
-        .footnote {
+        .note {
+            font-size: 11px;
+            color: #6e7a8a;
             text-align: center;
-            font-size: 0.7rem;
-            color: #4c5b82;
-            margin-top: 32px;
+            margin-top: 20px;
         }
 
-        /* запрещаем выделение текста на кнопках и счетчиках для лучшего UX */
-        .counter-btn, .reset-single, .toggle-option, .reset-all-btn {
-            user-select: none;
-            -webkit-user-select: none;
+        hr {
+            border: none;
+            height: 0.5px;
+            background: #2c3033;
+            margin: 12px 0;
         }
     </style>
 </head>
@@ -352,354 +297,315 @@
 <div class="container">
     <div class="header">
         <h1>📋 Квест-трекер</h1>
-        <div class="sub">BP: обычный / VIP (выбери свой режим)</div>
     </div>
 
-    <div class="vip-toggle-card">
-        <div class="vip-label">
-            👑 Режим получения BP
-        </div>
-        <div class="toggle-switch" id="vipToggle">
-            <button class="toggle-option" data-vip="false">🔹 Без VIP</button>
-            <button class="toggle-option" data-vip="true">💎 С VIP</button>
-        </div>
-        <div class="stats-block">
-            <span>🏆 Всего BP:</span>
-            <span id="totalBpDisplay">0</span>
-        </div>
+    <!-- общее количество BP вверху -->
+    <div class="total-bp-card">
+        <span class="total-bp-label">Всего получено BP</span>
+        <span class="total-bp-value" id="totalBpTop">0</span>
     </div>
 
-    <div class="actions-row">
-        <button class="reset-all-btn" id="resetAllBtn">⟳ Сбросить всё</button>
-        <div style="font-size:0.7rem; color:#6b7bb0;">⚡ + / – меняют прогресс. Сброс ⟳ обнуляет задание.</div>
+    <!-- переключатель VIP -->
+    <div class="vip-switch">
+        <button class="vip-option" data-vip="false">🔹 Без VIP</button>
+        <button class="vip-option" data-vip="true">💎 С VIP</button>
     </div>
 
-    <div class="quest-list" id="questListContainer"></div>
-    <div class="footnote">✅ Задания с дробью 2/4 означают: без VIP = 2 BP, с VIP = 4 BP. Выбор VIP влияет на все задания. Данные автосохраняются.</div>
+    <!-- список заданий -->
+    <div class="tasks-list" id="tasksList"></div>
+
+    <!-- счётчики прогресса -->
+    <div class="counters-section">
+        <div class="counters-title">📊 Счётчики прогресса</div>
+        <div id="countersContainer"></div>
+    </div>
+
+    <!-- кнопка сброса всего -->
+    <button class="reset-all-btn" id="resetAllBtn">⟳ Сбросить всё</button>
+    <div class="note">✓ Отмечайте выполненные задания • Счётчики помогают отслеживать прогресс</div>
 </div>
 
 <script>
-    // ---------------------- СПИСОК ЗАДАНИЙ --------------------------
-    // Каждое задание: name, target (количество действий для полного выполнения), 
-    // bpBase (BP без VIP), bpVip (BP c VIP), desc (опционально), repeatable (флаг)
-    // Для заданий где указано 2/4 -> bpBase=2, bpVip=4
-    // 1/2 -> bpBase=1, bpVip=2
-    // 3/6 -> bpBase=3, bpVip=6
-    // 4/8 -> bpBase=4, bpVip=8
-    // 10/20 -> bpBase=10, bpVip=20
-
-    const questsRaw = [
-        { name: "3 часа в онлайне (можно многократно)", target: 1, bpBase: 2, bpVip: 4, desc: "многократно за день", repeatable: true },
-        { name: "Нули в казино", target: 1, bpBase: 2, bpVip: 4, desc: "2/4 BP" },
-        { name: "25 действий на стройке", target: 25, bpBase: 2, bpVip: 4, desc: "2/4 BP" },
-        { name: "25 действий в порту", target: 25, bpBase: 2, bpVip: 4, desc: "2/4 BP" },
-        { name: "25 действий в шахте", target: 25, bpBase: 2, bpVip: 4, desc: "2/4 BP" },
-        { name: "20 подходов в тренажерном зале", target: 20, bpBase: 1, bpVip: 2, desc: "1/2 BP" },
-        { name: "Успешная тренировка в тире", target: 1, bpBase: 1, bpVip: 2, desc: "1/2 BP" },
-        { name: "10 посылок на почте", target: 10, bpBase: 1, bpVip: 2, desc: "1/2 BP" },
-        { name: "Купить лотерейный билет", target: 1, bpBase: 1, bpVip: 2, desc: "1/2 BP" },
-        { name: "10 действий на ферме (10 коров, пшеницы и т.д.)", target: 10, bpBase: 1, bpVip: 2, desc: "один способ в день" },
-        { name: "Выкопать 1 сокровище (не мусор)", target: 1, bpBase: 1, bpVip: 2, desc: "1/2 BP" },
-        { name: "5 раз снять 100% шкуру с животных", target: 5, bpBase: 2, bpVip: 4, desc: "2/4 BP" },
-        { name: "Поймать 20 рыб", target: 20, bpBase: 4, bpVip: 8, desc: "4/8 BP" },
-        { name: "Выполнить 3 заказа дальнобойщиком", target: 3, bpBase: 2, bpVip: 4, desc: "2/4 BP" },
-        { name: "2 круга на любом маршруте автобусника", target: 2, bpBase: 2, bpVip: 4, desc: "2/4 BP" },
-        { name: "Посетить любой сайт в браузере", target: 1, bpBase: 1, bpVip: 2, desc: "1/2 BP" },
-        { name: "Зайти в любой канал в Brawl", target: 1, bpBase: 1, bpVip: 2, desc: "1/2 BP" },
-        { name: "Поставить лайк любой анкете в Match", target: 1, bpBase: 1, bpVip: 2, desc: "1/2 BP" },
-        { name: "Кинуть мяч питомцу 15 раз", target: 15, bpBase: 2, bpVip: 4, desc: "2/4 BP" },
-        { name: "15 выполненных питомцем команд", target: 15, bpBase: 2, bpVip: 4, desc: "2/4 BP" },
-        { name: "Ставка в колесе удачи в казино (межсерверное колесо)", target: 1, bpBase: 3, bpVip: 6, desc: "3/6 BP" },
-        { name: "Сыграть в мафию в казино", target: 1, bpBase: 3, bpVip: 6, desc: "3/6 BP" },
-        { name: "Выиграть гонку в картинге", target: 1, bpBase: 1, bpVip: 2, desc: "1/2 BP" },
-        { name: "Проехать 1 станцию на метро (2 станции = задание)", target: 2, bpBase: 2, bpVip: 4, desc: "нужно 2 станции" },
-        { name: "Выполнить 2 квеста любых клубов", target: 2, bpBase: 4, bpVip: 8, desc: "4/8 BP" },
-        { name: "Починить деталь в автосервисе", target: 1, bpBase: 1, bpVip: 2, desc: "1/2 BP" },
-        { name: "Забросить 2 мяча в баскетболе", target: 2, bpBase: 1, bpVip: 2, desc: "1/2 BP (за 2 мяча)" },
-        { name: "Забить 2 гола в футболе", target: 2, bpBase: 1, bpVip: 2, desc: "1/2 BP" },
-        { name: "Победить в армрестлинге", target: 1, bpBase: 1, bpVip: 2, desc: "1/2 BP" },
-        { name: "Победить в дартс", target: 1, bpBase: 1, bpVip: 2, desc: "1/2 BP" },
-        { name: "Поиграть 1 минуту в волейбол", target: 1, bpBase: 1, bpVip: 2, desc: "1/2 BP" },
-        { name: "Поиграть 1 минуту в настольный теннис", target: 1, bpBase: 1, bpVip: 2, desc: "1/2 BP" },
-        { name: "Поиграть 1 минуту в большой теннис", target: 1, bpBase: 1, bpVip: 2, desc: "1/2 BP" },
-        { name: "Сделать платеж по лизингу", target: 1, bpBase: 1, bpVip: 2, desc: "1/2 BP" },
-        { name: "Посадить траву в теплице", target: 1, bpBase: 4, bpVip: 8, desc: "4/8 BP" },
-        { name: "Запустить переработку обезболивающих в лаборатории", target: 1, bpBase: 4, bpVip: 8, desc: "4/8 BP" },
-        { name: "Принять участие в двух аирдропах", target: 2, bpBase: 4, bpVip: 8, desc: "4/8 BP" },
-        { name: "3 победы в Дэнс Баттлах", target: 3, bpBase: 2, bpVip: 4, desc: "2/4 BP" },
-        { name: "Заказ материалов для бизнеса вручную (вкл/выкл)", target: 1, bpBase: 1, bpVip: 2, desc: "1/2 BP" },
-        { name: "Арендовать киностудию", target: 1, bpBase: 2, bpVip: 4, desc: "2/4 BP" },
-        { name: "Прокрутить за DP серебрянный, золотой или driver кейс", target: 1, bpBase: 10, bpVip: 20, desc: "10/20 BP" },
-        { name: "Два раза оплатить смену внешности у хирурга в EMS", target: 2, bpBase: 2, bpVip: 4, desc: "2/4 BP" },
-        { name: "Добавить 5 видео в кинотеатре", target: 5, bpBase: 1, bpVip: 2, desc: "1/2 BP" },
-        { name: "Выиграть 5 игр в тренировочном комплексе со ставкой (от 100$)", target: 5, bpBase: 1, bpVip: 2, desc: "1/2 BP" },
-        { name: "Выиграть 3 любых игры на арене со ставкой (от 100$)", target: 3, bpBase: 1, bpVip: 2, desc: "1/2 BP" },
-        { name: "Потушить 25 'огоньков' пожарным", target: 25, bpBase: 1, bpVip: 2, desc: "1/2 BP" },
-        { name: "Проехать 1 уличную гонку (регистрация в телефоне, ставка ≥1000$)", target: 1, bpBase: 1, bpVip: 2, desc: "1/2 BP" }
+    // ---------- СПИСОК ЗАДАНИЙ ----------
+    const tasksData = [
+        { text: "3 часа в онлайне (можно многократно)", bpBase: 2, bpVip: 4 },
+        { text: "Нули в казино", bpBase: 2, bpVip: 4 },
+        { text: "25 действий на стройке", bpBase: 2, bpVip: 4 },
+        { text: "25 действий в порту", bpBase: 2, bpVip: 4 },
+        { text: "25 действий в шахте", bpBase: 2, bpVip: 4 },
+        { text: "20 подходов в тренажерном зале", bpBase: 1, bpVip: 2 },
+        { text: "Успешная тренировка в тире", bpBase: 1, bpVip: 2 },
+        { text: "10 посылок на почте", bpBase: 1, bpVip: 2 },
+        { text: "Купить лотерейный билет", bpBase: 1, bpVip: 2 },
+        { text: "10 действий на ферме", bpBase: 1, bpVip: 2 },
+        { text: "Выкопать 1 сокровище (не мусор)", bpBase: 1, bpVip: 2 },
+        { text: "5 раз снять 100% шкуру с животных", bpBase: 2, bpVip: 4 },
+        { text: "Поймать 20 рыб", bpBase: 4, bpVip: 8 },
+        { text: "Выполнить 3 заказа дальнобойщиком", bpBase: 2, bpVip: 4 },
+        { text: "2 круга на любом маршруте автобусника", bpBase: 2, bpVip: 4 },
+        { text: "Посетить любой сайт в браузере", bpBase: 1, bpVip: 2 },
+        { text: "Зайти в любой канал в Brawl", bpBase: 1, bpVip: 2 },
+        { text: "Поставить лайк любой анкете в Match", bpBase: 1, bpVip: 2 },
+        { text: "Кинуть мяч питомцу 15 раз", bpBase: 2, bpVip: 4 },
+        { text: "15 выполненных питомцем команд", bpBase: 2, bpVip: 4 },
+        { text: "Ставка в колесе удачи (межсерверное колесо)", bpBase: 3, bpVip: 6 },
+        { text: "Сыграть в мафию в казино", bpBase: 3, bpVip: 6 },
+        { text: "Выиграть гонку в картинге", bpBase: 1, bpVip: 2 },
+        { text: "Проехать 1 станцию на метро", bpBase: 2, bpVip: 4 },
+        { text: "Выполнить 2 квеста любых клубов", bpBase: 4, bpVip: 8 },
+        { text: "Починить деталь в автосервисе", bpBase: 1, bpVip: 2 },
+        { text: "Забросить 2 мяча в баскетболе", bpBase: 1, bpVip: 2 },
+        { text: "Забить 2 гола в футболе", bpBase: 1, bpVip: 2 },
+        { text: "Победить в армрестлинге", bpBase: 1, bpVip: 2 },
+        { text: "Победить в дартс", bpBase: 1, bpVip: 2 },
+        { text: "Поиграть 1 минуту в волейбол", bpBase: 1, bpVip: 2 },
+        { text: "Поиграть 1 минуту в настольный теннис", bpBase: 1, bpVip: 2 },
+        { text: "Поиграть 1 минуту в большой теннис", bpBase: 1, bpVip: 2 },
+        { text: "Сделать платеж по лизингу", bpBase: 1, bpVip: 2 },
+        { text: "Посадить траву в теплице", bpBase: 4, bpVip: 8 },
+        { text: "Запустить переработку обезболивающих в лаборатории", bpBase: 4, bpVip: 8 },
+        { text: "Принять участие в двух аирдропах", bpBase: 4, bpVip: 8 },
+        { text: "3 победы в Дэнс Баттлах", bpBase: 2, bpVip: 4 },
+        { text: "Заказ материалов для бизнеса вручную (вкл/выкл)", bpBase: 1, bpVip: 2 },
+        { text: "Арендовать киностудию", bpBase: 2, bpVip: 4 },
+        { text: "Прокрутить за DP серебрянный, золотой или driver кейс", bpBase: 10, bpVip: 20 },
+        { text: "Два раза оплатить смену внешности у хирурга в EMS", bpBase: 2, bpVip: 4 },
+        { text: "Добавить 5 видео в кинотеатре", bpBase: 1, bpVip: 2 },
+        { text: "Выиграть 5 игр в тренировочном комплексе со ставкой (от 100$)", bpBase: 1, bpVip: 2 },
+        { text: "Выиграть 3 любых игры на арене со ставкой (от 100$)", bpBase: 1, bpVip: 2 },
+        { text: "Потушить 25 'огоньков' пожарным", bpBase: 1, bpVip: 2 },
+        { text: "Проехать 1 уличную гонку (регистрация в телефоне, ставка ≥1000$)", bpBase: 1, bpVip: 2 }
     ];
 
-    // Глобальное состояние
-    let isVip = false;          // false = без VIP, true = с VIP
-    let questProgress = [];     // массив { current: число }
+    // Счётчики: название, ключ, необходимое количество, единица измерения
+    const countersData = [
+        { label: "Стройка", key: "build", target: 25, unit: "действий" },
+        { label: "Порт", key: "port", target: 25, unit: "действий" },
+        { label: "Ферма", key: "farm", target: 10, unit: "действий" },
+        { label: "Шахта", key: "mine", target: 25, unit: "действий" },
+        { label: "Рыбалка", key: "fish", target: 20, unit: "рыб" },
+        { label: "Тренажёрный зал", key: "gym", target: 20, unit: "подходов" },
+        { label: "Почта", key: "post", target: 10, unit: "посылок" }
+    ];
+
+    // Состояние
+    let isVip = false;
+    let tasksChecked = new Array(tasksData.length).fill(false);
+    let counters = {};
+    countersData.forEach(c => { counters[c.key] = 0; });
 
     // Загрузка из localStorage
     function loadData() {
-        const savedVip = localStorage.getItem("questVipMode");
+        const savedVip = localStorage.getItem("graphite_vip_final");
         if (savedVip !== null) isVip = savedVip === "true";
         
-        const savedProgress = localStorage.getItem("questTrackerProgressV2");
-        if (savedProgress) {
+        const savedTasks = localStorage.getItem("graphite_tasks_final");
+        if (savedTasks) {
             try {
-                const parsed = JSON.parse(savedProgress);
-                if (Array.isArray(parsed) && parsed.length === questsRaw.length) {
-                    questProgress = parsed;
-                    return;
-                }
+                const parsed = JSON.parse(savedTasks);
+                if (Array.isArray(parsed) && parsed.length === tasksData.length) tasksChecked = parsed;
             } catch(e) {}
         }
-        // инициализация нулями
-        questProgress = questsRaw.map(() => ({ current: 0 }));
-    }
-
-    function saveProgress() {
-        localStorage.setItem("questVipMode", isVip);
-        localStorage.setItem("questTrackerProgressV2", JSON.stringify(questProgress));
-    }
-
-    // Получить максимальное BP за задание (в зависимости от VIP)
-    function getMaxBpForQuest(quest) {
-        return isVip ? quest.bpVip : quest.bpBase;
-    }
-
-    // Получить текущее заработанное BP для конкретного задания (дробное, если не выполнено полностью)
-    function getEarnedBpForQuest(idx) {
-        const quest = questsRaw[idx];
-        const prog = questProgress[idx];
-        const current = prog.current;
-        const maxBp = getMaxBpForQuest(quest);
         
-        if (quest.repeatable) {
-            // за каждое выполнение даёт полную награду (maxBp)
-            return current * maxBp;
-        } else {
-            const target = quest.target;
-            if (current >= target) return maxBp;
-            // пропорционально выполнению
-            return (current / target) * maxBp;
+        const savedCounters = localStorage.getItem("graphite_counters_final");
+        if (savedCounters) {
+            try {
+                const parsed = JSON.parse(savedCounters);
+                countersData.forEach(c => { if (typeof parsed[c.key] === 'number') counters[c.key] = parsed[c.key]; });
+            } catch(e) {}
         }
     }
+    
+    function saveAll() {
+        localStorage.setItem("graphite_vip_final", isVip);
+        localStorage.setItem("graphite_tasks_final", JSON.stringify(tasksChecked));
+        localStorage.setItem("graphite_counters_final", JSON.stringify(counters));
+    }
 
-    // Общая сумма BP
+    // BP за задание
+    function getTaskBp(task, isChecked) {
+        if (!isChecked) return 0;
+        return isVip ? task.bpVip : task.bpBase;
+    }
+    
     function getTotalBp() {
         let total = 0;
-        for (let i = 0; i < questsRaw.length; i++) {
-            total += getEarnedBpForQuest(i);
-        }
+        for (let i = 0; i < tasksData.length; i++) total += getTaskBp(tasksData[i], tasksChecked[i]);
         return total;
     }
 
-    // отрисовать интерфейс
-    function render() {
-        const container = document.getElementById("questListContainer");
+    // Обновление отображения общего BP (вверху)
+    function updateTotalDisplay() {
+        const totalSpanTop = document.getElementById("totalBpTop");
+        if (totalSpanTop) totalSpanTop.textContent = getTotalBp();
+    }
+
+    // Рендер заданий
+    function renderTasks() {
+        const container = document.getElementById("tasksList");
         if (!container) return;
         container.innerHTML = "";
         
-        questsRaw.forEach((quest, idx) => {
-            const prog = questProgress[idx];
-            const current = prog.current;
-            const target = quest.target;
-            const maxBp = getMaxBpForQuest(quest);
-            const earnedBp = getEarnedBpForQuest(idx);
-            const isRepeat = quest.repeatable || false;
+        tasksData.forEach((task, idx) => {
+            const bpText = isVip ? `${task.bpVip} BP` : `${task.bpBase} BP`;
+            const fullBp = `${task.bpBase}/${task.bpVip} BP`;
             
-            // отображение BP дроби
-            let bpDisplay = "";
-            if (isRepeat) {
-                bpDisplay = `🏆 ${earnedBp} BP (${current} раз(а) × ${maxBp})`;
-            } else {
-                if (current >= target) {
-                    bpDisplay = `✅ ${maxBp}/${maxBp} BP`;
-                } else {
-                    bpDisplay = `🎯 ${earnedBp.toFixed(1)}/${maxBp} BP`;
-                }
-            }
+            const div = document.createElement("div");
+            div.className = "task-item";
             
-            // статус прогресса
-            let statusHtml = "";
-            if (isRepeat) {
-                statusHtml = `<span class="status-progress">♻️ выполнено ${current} раз(а)</span>`;
-            } else {
-                if (current >= target) {
-                    statusHtml = `<span class="status-done">✔ полностью выполнено (${current}/${target})</span>`;
-                } else {
-                    statusHtml = `<span class="status-progress">📊 прогресс: ${current}/${target}</span>`;
-                }
-            }
+            const cb = document.createElement("input");
+            cb.type = "checkbox";
+            cb.className = "task-checkbox";
+            cb.checked = tasksChecked[idx];
+            cb.addEventListener("change", (e) => {
+                tasksChecked[idx] = e.target.checked;
+                saveAll();
+                updateTotalDisplay();
+                // обновляем текст BP в этом же задании (если нужно, но меняется только сумма)
+            });
             
-            // доп информация о базовых BP
-            const baseBpShow = quest.bpBase;
-            const vipBpShow = quest.bpVip;
-            const bpRange = isVip ? `${vipBpShow} BP (VIP)` : `${baseBpShow} BP (обычный)`;
+            const contentDiv = document.createElement("div");
+            contentDiv.className = "task-content";
             
-            const card = document.createElement("div");
-            card.className = "quest-card";
-            card.innerHTML = `
-                <div class="quest-main">
-                    <div class="quest-info">
-                        <div class="quest-title">
-                            <span class="quest-name">${escapeHtml(quest.name)}</span>
-                            <span class="bp-badge">${isRepeat ? '🔁 повторяемое' : '🎯 лимитное'}</span>
-                        </div>
-                        <div class="quest-desc">
-                            <span class="target-info">🎯 ${isRepeat ? 'безлимит' : 'нужно: ' + target + ' раз'}</span>
-                            <span class="bp-info">💎 ${baseBpShow}/${vipBpShow} BP • сейчас: ${bpRange}</span>
-                        </div>
-                        ${quest.desc ? `<div style="font-size:0.7rem; color:#6b7bb0;">📌 ${escapeHtml(quest.desc)}</div>` : ''}
-                    </div>
-                    <div class="counter-controls">
-                        <button class="counter-btn decrement" data-idx="${idx}">−</button>
-                        <span class="counter-value">${current}${isRepeat ? '' : (current > target ? ' /'+target : '')}</span>
-                        <button class="counter-btn increment" data-idx="${idx}">+</button>
-                        <button class="reset-single" data-idx="${idx}" title="Сбросить задание">⟳</button>
-                    </div>
-                </div>
-                <div class="quest-footer">
-                    ${statusHtml}
-                    <div style="font-size:0.7rem;">${bpDisplay}</div>
-                </div>
-            `;
-            container.appendChild(card);
+            const textSpan = document.createElement("span");
+            textSpan.className = "task-text";
+            textSpan.textContent = task.text;
+            
+            const bpSpan = document.createElement("span");
+            bpSpan.className = "task-bp";
+            bpSpan.textContent = `🎯 ${fullBp} • сейчас: ${bpText}`;
+            
+            contentDiv.appendChild(textSpan);
+            contentDiv.appendChild(bpSpan);
+            
+            div.appendChild(cb);
+            div.appendChild(contentDiv);
+            container.appendChild(div);
         });
-        
-        // обновляем тотал
-        const totalSpan = document.getElementById("totalBpDisplay");
-        if (totalSpan) {
-            totalSpan.innerText = getTotalBp().toFixed(1);
-        }
-        
-        // навесить обработчики с предотвращением всплытия для защиты от зума (хотя CSS уже решает)
-        document.querySelectorAll(".increment").forEach(btn => {
-            btn.removeEventListener("click", incrementHandler);
-            btn.addEventListener("click", incrementHandler);
-        });
-        document.querySelectorAll(".decrement").forEach(btn => {
-            btn.removeEventListener("click", decrementHandler);
-            btn.addEventListener("click", decrementHandler);
-        });
-        document.querySelectorAll(".reset-single").forEach(btn => {
-            btn.removeEventListener("click", resetSingleHandler);
-            btn.addEventListener("click", resetSingleHandler);
-        });
-        
-        function incrementHandler(e) {
-            e.preventDefault();
-            const idx = parseInt(e.currentTarget.dataset.idx);
-            if (isNaN(idx)) return;
-            const q = questsRaw[idx];
-            if (q.repeatable) {
-                questProgress[idx].current += 1;
-            } else {
-                if (questProgress[idx].current < q.target) {
-                    questProgress[idx].current += 1;
-                }
-            }
-            saveProgress();
-            render();
-        }
-        
-        function decrementHandler(e) {
-            e.preventDefault();
-            const idx = parseInt(e.currentTarget.dataset.idx);
-            if (isNaN(idx)) return;
-            if (questProgress[idx].current > 0) {
-                questProgress[idx].current -= 1;
-            }
-            saveProgress();
-            render();
-        }
-        
-        function resetSingleHandler(e) {
-            e.preventDefault();
-            const idx = parseInt(e.currentTarget.dataset.idx);
-            if (isNaN(idx)) return;
-            questProgress[idx].current = 0;
-            saveProgress();
-            render();
-        }
     }
-    
-    // Обновить VIP режим и перерисовать
-    function setVipMode(vipStatus) {
-        isVip = vipStatus;
-        saveProgress();
-        render();
-        updateToggleButtons();
+
+    // Рендер счётчиков с кнопкой сброса у каждого
+    function renderCounters() {
+        const container = document.getElementById("countersContainer");
+        if (!container) return;
+        container.innerHTML = "";
+        
+        countersData.forEach(c => {
+            const row = document.createElement("div");
+            row.className = "counter-row";
+            
+            const infoDiv = document.createElement("div");
+            infoDiv.className = "counter-info";
+            const labelSpan = document.createElement("span");
+            labelSpan.className = "counter-label";
+            labelSpan.textContent = c.label;
+            const targetSpan = document.createElement("span");
+            targetSpan.className = "counter-target";
+            targetSpan.textContent = `нужно: ${c.target} ${c.unit}`;
+            infoDiv.appendChild(labelSpan);
+            infoDiv.appendChild(targetSpan);
+            
+            const controlsGroup = document.createElement("div");
+            controlsGroup.className = "counter-controls-group";
+            
+            const minusBtn = document.createElement("button");
+            minusBtn.textContent = "−";
+            minusBtn.className = "counter-btn";
+            minusBtn.addEventListener("click", () => {
+                if (counters[c.key] > 0) {
+                    counters[c.key]--;
+                    saveAll();
+                    renderCounters();
+                    updateTotalDisplay();
+                }
+            });
+            
+            const valueSpan = document.createElement("span");
+            valueSpan.className = "counter-value";
+            valueSpan.textContent = counters[c.key];
+            
+            const plusBtn = document.createElement("button");
+            plusBtn.textContent = "+";
+            plusBtn.className = "counter-btn";
+            plusBtn.addEventListener("click", () => {
+                counters[c.key]++;
+                saveAll();
+                renderCounters();
+                updateTotalDisplay();
+            });
+            
+            const resetSingleBtn = document.createElement("button");
+            resetSingleBtn.textContent = "↺";
+            resetSingleBtn.className = "counter-reset";
+            resetSingleBtn.title = "Сбросить счётчик";
+            resetSingleBtn.addEventListener("click", () => {
+                counters[c.key] = 0;
+                saveAll();
+                renderCounters();
+                updateTotalDisplay();
+            });
+            
+            controlsGroup.appendChild(minusBtn);
+            controlsGroup.appendChild(valueSpan);
+            controlsGroup.appendChild(plusBtn);
+            controlsGroup.appendChild(resetSingleBtn);
+            
+            row.appendChild(infoDiv);
+            row.appendChild(controlsGroup);
+            container.appendChild(row);
+        });
     }
-    
-    function updateToggleButtons() {
-        const btns = document.querySelectorAll(".toggle-option");
+
+    function updateVipButtons() {
+        const btns = document.querySelectorAll(".vip-option");
         btns.forEach(btn => {
-            const btnVip = btn.dataset.vip === "true";
-            if (btnVip === isVip) {
-                btn.classList.add("active");
-            } else {
-                btn.classList.remove("active");
-            }
+            const isBtnVip = btn.dataset.vip === "true";
+            if (isBtnVip === isVip) btn.classList.add("active");
+            else btn.classList.remove("active");
+        });
+    }
+
+    function resetAll() {
+        tasksChecked.fill(false);
+        countersData.forEach(c => { counters[c.key] = 0; });
+        saveAll();
+        renderTasks();
+        renderCounters();
+        updateTotalDisplay();
+    }
+
+    // Инициализация VIP переключателя
+    function initVipSwitcher() {
+        const btns = document.querySelectorAll(".vip-option");
+        btns.forEach(btn => {
+            btn.addEventListener("click", () => {
+                const newVip = btn.dataset.vip === "true";
+                if (newVip !== isVip) {
+                    isVip = newVip;
+                    saveAll();
+                    updateVipButtons();
+                    renderTasks();      // обновляем текст BP у заданий
+                    updateTotalDisplay();
+                }
+            });
         });
     }
     
-    function resetAllQuests() {
-        for (let i = 0; i < questProgress.length; i++) {
-            questProgress[i].current = 0;
-        }
-        saveProgress();
-        render();
-    }
-    
-    function escapeHtml(str) {
-        if (!str) return "";
-        return str.replace(/[&<>]/g, function(m) {
-            if (m === '&') return '&amp;';
-            if (m === '<') return '&lt;';
-            if (m === '>') return '&gt;';
-            return m;
-        });
-    }
-    
-    // Инициализация
+    // Загрузка и старт
     loadData();
-    render();
+    renderTasks();
+    renderCounters();
+    initVipSwitcher();
+    updateVipButtons();
+    updateTotalDisplay();
     
-    // VIP переключатели
-    const vipToggleContainer = document.getElementById("vipToggle");
-    if (vipToggleContainer) {
-        vipToggleContainer.addEventListener("click", (e) => {
-            const btn = e.target.closest(".toggle-option");
-            if (!btn) return;
-            e.preventDefault();
-            const newVip = btn.dataset.vip === "true";
-            if (newVip !== isVip) {
-                setVipMode(newVip);
-            }
-        });
-    }
+    document.getElementById("resetAllBtn")?.addEventListener("click", () => {
+        if (confirm("Сбросить все отметки заданий и счётчики?")) resetAll();
+    });
     
-    const resetBtn = document.getElementById("resetAllBtn");
-    if (resetBtn) {
-        resetBtn.addEventListener("click", () => {
-            if (confirm("Сбросить прогресс всех заданий? Все отметки обнулятся.")) {
-                resetAllQuests();
-            }
-        });
-    }
-    
-    updateToggleButtons();
-    
-    // дополнительная защита от двойного тапа на всей странице (для старых браузеров)
+    // защита от зума двойным тапом
     document.addEventListener('touchstart', (e) => {
-        if (e.touches.length > 1) {
-            e.preventDefault();
-        }
+        if (e.touches.length > 1) e.preventDefault();
     }, { passive: false });
 </script>
 </body>
