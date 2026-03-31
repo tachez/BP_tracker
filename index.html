@@ -73,11 +73,19 @@
 
         .initial-bp-block {
             display: flex;
-            align-items: center;
+            flex-direction: column;
             gap: 8px;
             background: #2a2e32;
-            padding: 6px 14px;
-            border-radius: 40px;
+            padding: 10px 14px;
+            border-radius: 20px;
+        }
+
+        .initial-input-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: center;
         }
 
         .initial-bp-label {
@@ -101,6 +109,36 @@
 
         .initial-bp-input:focus {
             border-color: #F3CD49;
+        }
+
+        .initial-buttons {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .initial-btn {
+            background: #3a3f44;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 28px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #F3CD49;
+            cursor: pointer;
+            transition: 0.1s;
+            min-width: 44px;
+        }
+
+        .initial-btn:active {
+            background: #4f555b;
+            transform: scale(0.96);
+        }
+
+        .initial-btn.small {
+            padding: 6px 10px;
+            font-size: 16px;
         }
 
         .vip-switch {
@@ -335,8 +373,18 @@
             <span class="total-bp-value" id="totalBpDisplay">0</span>
         </div>
         <div class="initial-bp-block">
-            <span class="initial-bp-label">Исходно BP</span>
-            <input type="number" id="initialBpInput" class="initial-bp-input" value="0" step="1" min="0" placeholder="0">
+            <div class="initial-input-row">
+                <span class="initial-bp-label">Исходно BP</span>
+                <input type="number" id="initialBpInput" class="initial-bp-input" value="0" step="1" min="0">
+                <button class="initial-btn small" id="initialMinusBtn" title="Вычесть 1">−</button>
+                <button class="initial-btn small" id="initialPlusBtn" title="Прибавить 1">+</button>
+            </div>
+            <div class="initial-buttons">
+                <button class="initial-btn" id="initialAdd1Btn">+1</button>
+                <button class="initial-btn" id="initialAdd2Btn">+2</button>
+                <button class="initial-btn" id="initialAdd4Btn">+4</button>
+                <button class="initial-btn" id="initialAdd8Btn">+8</button>
+            </div>
         </div>
     </div>
 
@@ -370,7 +418,7 @@
         { id: null, text: "Купить лотерейный билет", bpBase: 1, bpVip: 2, autoCounter: null },
         { id: "farm", text: "10 действий на ферме", bpBase: 1, bpVip: 2, autoCounter: "farm", required: 10 },
         { id: null, text: "Выкопать 1 сокровище (не мусор)", bpBase: 1, bpVip: 2, autoCounter: null },
-        { id: null, text: "5 раз снять 100% шкуру с животных", bpBase: 2, bpVip: 4, autoCounter: null },
+        { id: "skins", text: "5 раз снять 100% шкуру с животных", bpBase: 2, bpVip: 4, autoCounter: "skins", required: 5 },
         { id: "fish", text: "Поймать 20 рыб", bpBase: 4, bpVip: 8, autoCounter: "fish", required: 20 },
         { id: null, text: "Выполнить 3 заказа дальнобойщиком", bpBase: 2, bpVip: 4, autoCounter: null },
         { id: null, text: "2 круга на любом маршруте автобусника", bpBase: 2, bpVip: 4, autoCounter: null },
@@ -408,12 +456,13 @@
         { id: null, text: "Проехать 1 уличную гонку", bpBase: 1, bpVip: 2, autoCounter: null }
     ];
 
-    // Счётчики с максимальными значениями
+    // Счётчики с максимальными значениями (добавлен skins)
     const countersConfig = [
         { label: "Стройка", key: "build", max: 25, unit: "действий", taskId: "build" },
         { label: "Порт", key: "port", max: 25, unit: "действий", taskId: "port" },
         { label: "Ферма", key: "farm", max: 10, unit: "действий", taskId: "farm" },
         { label: "Шахта", key: "mine", max: 25, unit: "действий", taskId: "mine" },
+        { label: "Шкуры животных", key: "skins", max: 5, unit: "шкур", taskId: "skins" },
         { label: "Рыбалка", key: "fish", max: 20, unit: "рыб", taskId: "fish" },
         { label: "Тренажёрный зал", key: "gym", max: 20, unit: "подходов", taskId: "gym" },
         { label: "Почта", key: "post", max: 10, unit: "посылок", taskId: "post" },
@@ -430,10 +479,10 @@
 
     // Загрузка из localStorage
     function loadData() {
-        const savedVip = localStorage.getItem("bptracker_vip_final");
+        const savedVip = localStorage.getItem("bptracker_vip_final2");
         if (savedVip !== null) isVip = savedVip === "true";
         
-        const savedTasks = localStorage.getItem("bptracker_tasks_final");
+        const savedTasks = localStorage.getItem("bptracker_tasks_final2");
         if (savedTasks) {
             try {
                 const parsed = JSON.parse(savedTasks);
@@ -441,7 +490,7 @@
             } catch(e) {}
         }
         
-        const savedCounters = localStorage.getItem("bptracker_counters_final");
+        const savedCounters = localStorage.getItem("bptracker_counters_final2");
         if (savedCounters) {
             try {
                 const parsed = JSON.parse(savedCounters);
@@ -449,7 +498,7 @@
             } catch(e) {}
         }
         
-        const savedInitialField = localStorage.getItem("bptracker_initial_final");
+        const savedInitialField = localStorage.getItem("bptracker_initial_final2");
         if (savedInitialField !== null) {
             const parsed = parseInt(savedInitialField, 10);
             if (!isNaN(parsed)) initialBpField = parsed;
@@ -457,10 +506,10 @@
     }
     
     function saveAll() {
-        localStorage.setItem("bptracker_vip_final", isVip);
-        localStorage.setItem("bptracker_tasks_final", JSON.stringify(tasksChecked));
-        localStorage.setItem("bptracker_counters_final", JSON.stringify(counters));
-        localStorage.setItem("bptracker_initial_final", initialBpField);
+        localStorage.setItem("bptracker_vip_final2", isVip);
+        localStorage.setItem("bptracker_tasks_final2", JSON.stringify(tasksChecked));
+        localStorage.setItem("bptracker_counters_final2", JSON.stringify(counters));
+        localStorage.setItem("bptracker_initial_final2", initialBpField);
     }
 
     // Синхронизация отметки задания со счётчиком
@@ -478,7 +527,7 @@
         return false;
     }
 
-    // Обновление счётчика с проверкой максимума и синхронизацией отметки
+    // Обновление счётчика
     function updateCounter(key, delta) {
         const config = countersConfig.find(c => c.key === key);
         if (!config) return;
@@ -489,21 +538,42 @@
         
         if (counters[key] !== newValue) {
             counters[key] = newValue;
-            // Синхронизируем отметку задания с новым значением счётчика
             syncTaskWithCounter(key, newValue);
             saveAll();
             renderAll();
         }
     }
 
-    // Полный сброс счётчика (устанавливает в 0 и снимает отметку)
+    // Полный сброс счётчика
     function resetCounter(key) {
         if (counters[key] !== 0) {
             counters[key] = 0;
-            // Снимаем отметку с соответствующего задания
             syncTaskWithCounter(key, 0);
             saveAll();
             renderAll();
+        }
+    }
+
+    // Функции для работы с исходным BP
+    function setInitialBp(value) {
+        let newValue = value;
+        if (isNaN(newValue)) newValue = 0;
+        if (newValue < 0) newValue = 0;
+        if (initialBpField !== newValue) {
+            initialBpField = newValue;
+            saveAll();
+            updateInitialBpInput();
+        }
+    }
+
+    function addInitialBp(delta) {
+        setInitialBp(initialBpField + delta);
+    }
+
+    function updateInitialBpInput() {
+        const inputField = document.getElementById("initialBpInput");
+        if (inputField && parseInt(inputField.value, 10) !== initialBpField) {
+            inputField.value = initialBpField;
         }
     }
 
@@ -525,11 +595,7 @@
     function updateTotalDisplay() {
         const totalSpan = document.getElementById("totalBpDisplay");
         if (totalSpan) totalSpan.textContent = getTotalBp();
-        
-        const inputField = document.getElementById("initialBpInput");
-        if (inputField && parseInt(inputField.value, 10) !== initialBpField) {
-            inputField.value = initialBpField;
-        }
+        updateInitialBpInput();
     }
 
     // Рендер заданий
@@ -670,6 +736,7 @@
     });
     saveAll();
     
+    // Настройка полей ввода исходного BP
     const inputField = document.getElementById("initialBpInput");
     if (inputField) {
         inputField.value = initialBpField;
@@ -677,11 +744,19 @@
             let val = parseInt(e.target.value, 10);
             if (isNaN(val)) val = 0;
             if (val < 0) val = 0;
-            initialBpField = val;
-            saveAll();
+            setInitialBp(val);
         });
     }
     
+    // Кнопки управления исходным BP
+    document.getElementById("initialMinusBtn")?.addEventListener("click", () => addInitialBp(-1));
+    document.getElementById("initialPlusBtn")?.addEventListener("click", () => addInitialBp(1));
+    document.getElementById("initialAdd1Btn")?.addEventListener("click", () => addInitialBp(1));
+    document.getElementById("initialAdd2Btn")?.addEventListener("click", () => addInitialBp(2));
+    document.getElementById("initialAdd4Btn")?.addEventListener("click", () => addInitialBp(4));
+    document.getElementById("initialAdd8Btn")?.addEventListener("click", () => addInitialBp(8));
+    
+    // VIP переключатель
     const vipBtns = document.querySelectorAll(".vip-option");
     vipBtns.forEach(btn => {
         btn.addEventListener("click", () => {
